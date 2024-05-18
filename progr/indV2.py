@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+
 # Для своего индивидуального задания лабораторной работы 2.23 необходимо 
 # организовать конвейер, в котором сначала в отдельном потоке вычисляется 
 # значение первой функции, после чего результаты вычисления должны 
@@ -11,15 +12,17 @@
 import math
 from threading import Barrier, Lock, Thread
 
+
 E = 10e-7
 lock = Lock()
 barrier = Barrier(2)
+
 
 def series1(x, eps, results):
     s = 0
     n = 1
     while True:
-        term = (-1)**(n+1) * math.sin(n * x) / n
+        term = (-1)**(n + 1) * math.sin(n * x) / n
         if abs(term) < eps:
             break
         else:
@@ -29,17 +32,19 @@ def series1(x, eps, results):
         results["series1"] = s
     barrier.wait()  
 
+
 def series2(x, eps, results):
     s = 0
     n = 0
-    term = x  # Первый член ряда
+    term = x
     while abs(term) >= eps:
         s += term
         n += 1
-        term *= x**2 / ((2*n) * (2*n + 1))  # Использование рекуррентного соотношения
+        term *= x**2 / ((2 * n) * (2 * n + 1))
     with lock:
         results["series2"] = s
-    barrier.wait()  
+    barrier.wait()
+
 
 def main():
     results = {}
@@ -71,6 +76,7 @@ def main():
     print(f"Sum of series 2: {round(sum2, 7)}")
     print(f"Control value 2: {round(control_value2, 7)}")
     print(f"Match 2: {round(sum2, 7) == round(control_value2, 7)}")
+
 
 if __name__ == "__main__":
     main()
